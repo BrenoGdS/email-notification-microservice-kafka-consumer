@@ -1,4 +1,4 @@
-package com.appssdeveloperblog.ws.emailnotificationmicroservice;
+package com.appsdeveloperblog.ws.emailnotificationmicroservice;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.appssdeveloperblog.ws.emailnotificationmicroservice;
+package com.appsdeveloperblog.ws.emailnotificationmicroservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
