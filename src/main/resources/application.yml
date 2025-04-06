@@ -9,4 +9,4 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # Converts byte[] to String for keys
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer  # Converts byte[] to JSON object
       properties:
-        spring.json.trusted.packages: "com.appsdeveloperblog.ws.products"  # Trusted package(s) for deserialization
+        spring.json.trusted.packages: "com.appsdeveloperblog.ws.coreblog.event"  # Trusted package(s) for deserialization
