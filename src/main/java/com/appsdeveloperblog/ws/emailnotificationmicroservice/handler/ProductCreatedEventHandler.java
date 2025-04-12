@@ -26,17 +26,12 @@ public class ProductCreatedEventHandler {
     @KafkaHandler
     public void handle(ProductCreatedEvent productCreatedEvent) {
         try {
-            // Process the event (for instance, call a remote service)
             LOGGER.info("Received a new event: " + productCreatedEvent.toString());
-
-        } catch (RetryableException ex) { //SomeTransientException
-            // Transient error – retry might succeed
+        } catch (RetryableException ex) {
             throw new RetryableException("Remote service timed out, retrying...", ex);
         } catch (NullPointerException ex) {
-            // Non-recoverable error – do not retry
             throw new NonRetryableException("Non-recoverable error occurred", ex);
         } catch (Exception ex) {
-            // Non-recoverable error – do not retry
             throw new NonRetryableException("Non-recoverable error occurred", ex);
         }
     }
