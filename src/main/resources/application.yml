@@ -4,7 +4,7 @@ server:
 spring:
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092,localhost:9094  # List at least one broker; more if available
+      bootstrap-servers: localhost:9092,localhost:9093  # List at least one broker; more if available
       group-id: product-created-events  # Unique ID for the consumer group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # Converts byte[] to String for keys
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer  # Converts byte[] to JSON object
