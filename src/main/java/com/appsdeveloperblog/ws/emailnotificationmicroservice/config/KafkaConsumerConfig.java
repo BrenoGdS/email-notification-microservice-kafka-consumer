@@ -54,7 +54,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    //add a kafkaTemplate in the input parameters to be used to produce the messages to dlt topic
+    //add a kafkaTemplate in the input parameters to be used to produce the messages to dlt topic (topic used to store messages with errors)
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ProductCreatedEvent> kafkaListenerContainerFactory(KafkaTemplate<String, Object> kafkaTemplate) {
         ConcurrentKafkaListenerContainerFactory<String, ProductCreatedEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
