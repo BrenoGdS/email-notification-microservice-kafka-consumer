@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:15.5
+    restart: always
+    container_name: products-postgres
+    hostname: postgres
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: [ 'postgres', '-c', 'wal_level=logical', '-c', 'timezone=UTC' ]
+    healthcheck:
+      test: [ 'CMD', 'psql', '-U', 'postgres', '-d', '${POSTGRES_DB}', '-c', 'SELECT 1' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - products-postgre-data:/var/lib/postgresql/data
+    networks:
+      - products-network
+
+networks:
+  products-network:
+    driver: bridge
+
+volumes:
+  products-postgre-data:
+    driver: local
