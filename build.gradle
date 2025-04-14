@@ -29,6 +29,10 @@ dependencies {
 	runtimeOnly "org.postgresql:postgresql"
 	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

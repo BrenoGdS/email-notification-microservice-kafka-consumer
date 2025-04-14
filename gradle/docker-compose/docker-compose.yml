@@ -1,8 +1,8 @@
 services:
-  db:
+  dbEmail:
     image: postgres:15.5
     restart: always
-    container_name: products-postgres
+    container_name: email-postgres
     hostname: postgres
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -17,14 +17,14 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - products-postgre-data:/var/lib/postgresql/data
+      - email-postgre-data:/var/lib/postgresql/data
     networks:
-      - products-network
+      - email-network
 
 networks:
-  products-network:
+  email-network:
     driver: bridge
 
 volumes:
-  products-postgre-data:
+  email-postgre-data:
     driver: local
