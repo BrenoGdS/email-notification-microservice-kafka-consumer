@@ -40,20 +40,6 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String trustedPackages;
 
-    @Bean
-    public ConsumerFactory<String, ProductCreatedEvent> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        // Configure consumer to use an error-handling deserializer for message values
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class); // Wraps the actual deserializer to catch errors
-        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class); // Uses JsonDeserializer for converting bytes to JSON
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPackages);
-
-        return new DefaultKafkaConsumerFactory<>(props);
-    }
-
     //add a kafkaTemplate in the input parameters to be used to produce the messages to dlt topic (topic used to store messages with errors)
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ProductCreatedEvent> kafkaListenerContainerFactory(KafkaTemplate<String, Object> kafkaTemplate) {
@@ -71,6 +57,20 @@ public class KafkaConsumerConfig {
         factory.setCommonErrorHandler(errorHandler);
         factory.setConsumerFactory(consumerFactory());
         return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, ProductCreatedEvent> consumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        // Configure consumer to use an error-handling deserializer for message values
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class); // Wraps the actual deserializer to catch errors
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class); // Uses JsonDeserializer for converting bytes to JSON
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPackages);
+
+        return new DefaultKafkaConsumerFactory<>(props);
     }
 
     //configure the kafkaTemplate bean which was injected in the kafkaListenerContainerFactory() method.
