@@ -6,9 +6,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
@@ -40,6 +42,9 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String trustedPackages;
 
+    @Autowired
+    Environment env;
+
     //add a kafkaTemplate in the input parameters to be used to produce the messages to dlt topic (topic used to store messages with errors)
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ProductCreatedEvent> kafkaListenerContainerFactory(KafkaTemplate<String, Object> kafkaTemplate) {
@@ -69,6 +74,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class); // Wraps the actual deserializer to catch errors
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class); // Uses JsonDeserializer for converting bytes to JSON
         props.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPackages);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, env.getProperty("spring.kafka.consumer.auto-offset-reset"));
 
         return new DefaultKafkaConsumerFactory<>(props);
     }

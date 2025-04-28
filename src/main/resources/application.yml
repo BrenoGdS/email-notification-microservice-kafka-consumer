@@ -22,3 +22,4 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer  # Converts byte[] to JSON object
       properties:
         spring.json.trusted.packages: "com.appsdeveloperblog.ws.coreblog.event"  # Trusted package(s) for deserialization
+      auto-offset-reset: earliest
