@@ -1,0 +1,30 @@
+services:
+  dbEmail:
+    image: postgres:15.5
+    restart: always
+    container_name: email-postgres
+    hostname: postgres
+    ports:
+      - "${POSTGRES_PORT_INTEGRATION_TEST:-30008}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: [ 'postgres', '-c', 'wal_level=logical', '-c', 'timezone=UTC' ]
+    healthcheck:
+      test: [ 'CMD', 'psql', '-U', 'postgres', '-d', '${POSTGRES_DB}', '-c', 'SELECT 1' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - email-postgre-data:/var/lib/postgresql/data
+    networks:
+      - email-network
+
+networks:
+  email-network:
+    driver: bridge
+
+volumes:
+  email-postgre-data:
+    driver: local

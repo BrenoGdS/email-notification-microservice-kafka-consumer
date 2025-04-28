@@ -1,0 +1,24 @@
+server:
+  port: 8082  # Use 0 for a random port to allow multiple instances
+
+spring:
+  application:
+    name: email
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT_INTEGRATION_TEST}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9093  # List at least one broker; more if available
+      group-id: product-created-events  # Unique ID for the consumer group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # Converts byte[] to String for keys
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer  # Converts byte[] to JSON object
+      properties:
+        spring.json.trusted.packages: "com.appsdeveloperblog.ws.coreblog.event"  # Trusted package(s) for deserialization
