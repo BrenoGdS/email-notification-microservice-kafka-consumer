@@ -8,6 +8,7 @@ import com.appsdeveloperblog.ws.emailnotificationmicroservice.repository.Process
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -40,14 +41,19 @@ public class ProductCreatedEventHandler {
                 LOGGER.info("Duplicate message received (ID: {}), skipping processing.", messageId);
                 return;
             }
-            LOGGER.info("Received a new event: " + event.toString());
-            processedEventRepository.save(new ProcessedEventEntity(messageId, event.getProductId().toString()));
         } catch (RetryableException ex) {
             throw new RetryableException("Remote service timed out, retrying...", ex);
         } catch (NullPointerException ex) {
             throw new NonRetryableException("Non-recoverable error occurred", ex);
         } catch (Exception ex) {
             throw new NonRetryableException("Non-recoverable error occurred", ex);
+        }
+        // Save a unique message id in a database table
+        try {
+            LOGGER.info("Received a new event: " + event.toString());
+            processedEventRepository.save(new ProcessedEventEntity(messageId, event.getProductId().toString()));
+        } catch (DataIntegrityViolationException ex) {
+            throw new NonRetryableException(ex);
         }
     }
 }
